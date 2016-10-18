@@ -2,23 +2,24 @@ const express = require('express'),
       stylus = require('stylus'),
       nib = require('nib'),
       port = 8080,
-      app = express();
-      
-function compile(str, path) {
-    return stylus(str)
-     .set('filename', path)
-     .set('compress', true)
-     .use(nib())
-     .import('nib');
+      app = express(),
+      compile = (str, path)=> {
+          return stylus(str)
+            .set('filename', path)
+            .use(nib());
 }
-      
-app.middleware({
-     src: __dirname + '/stylesheets'
-    , dest: __dirname + '/public'
-    , compile: compile
-})
-      
+
+app.set('views', __dirname + '/views');
 app.set('view engine', 'pug');
+
+app.use(stylus.middleware(
+    { src: __dirname + '/public'
+    , compile: compile
+    }
+));
+app.use(express.static(__dirname + '/public'));
+
+      
       
 app.get('/', function (req, res) {
     res.render('index', { fullUrl: req.protocol + '://' + req.get('host') + req.originalUrl,
@@ -26,7 +27,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/:timeStr', function (req, res) {
-    var date = new Date(req.params.timeStr),
+    var date = new Date(parseInt(req.params.timeStr) || unescape(req.params.timeStr)),
         result;
     
     if (Object.prototype.toString.call(date) === "[object Date]" && !isNaN(date.getTime())) {
@@ -41,6 +42,8 @@ app.get('/:timeStr', function (req, res) {
     
     res.send(result);
 });
+
+
 
 app.listen(port, function () {
   console.log('The timestamp app is listening on port '+port+'!');

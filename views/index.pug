@@ -1,15 +1,25 @@
 html  
     head
         title= title
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        link(href="/stylesheets/main.css" rel="stylesheet")
+        link(rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons")
+        link(rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.indigo-amber.min.css")
+        script(defer src="https://code.getmdl.io/1.2.1/material.min.js")
     body
-        div
-            header
-                h1 Timestamp App
-                h3 Instructions
-            main
-                h4 Welcome to the Timestamp App!
-                p Use these URL formats to get time in JSON:
-                ul
-                    li #{fullUrl}/May%2020,%202016
-                    li #{fullUrl}/1430137666
+        .mdl-layout__container
+            .mdl-layout.mdl-js-layout
+                main.mdl-layout__content
+                    .mdl-grid
+                        .mdl-cell.mdl-cell--12-col
+                            h1 Timestamp App
+                            h3 Instructions
+                        .mdl-cell.mdl-cell--12-col
+                            h5 Welcome to the Timestamp App!
+                            p Use these URL formats to get time in JSON:
+                            ul
+                                - var dateStr = 'May%2020,%202016';
+                                - var unix = '1430137666';
+                                li: a(href=fullUrl+encodeURIComponent(dateStr)) #{fullUrl}<b>#{dateStr}</b>
+                                li: a(href=fullUrl+unix) #{fullUrl}<b>#{unix}</b>
             
