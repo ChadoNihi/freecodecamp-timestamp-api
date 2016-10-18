@@ -1,7 +1,6 @@
 const express = require('express'),
       stylus = require('stylus'),
       nib = require('nib'),
-      port = 8080,
       app = express(),
       compile = (str, path)=> {
           return stylus(str)
@@ -9,6 +8,7 @@ const express = require('express'),
             .use(nib());
 }
 
+app.set( 'port', ( process.env.PORT || 5000 ));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'pug');
 
@@ -45,6 +45,6 @@ app.get('/:timeStr', function (req, res) {
 
 
 
-app.listen(port, function () {
-  console.log('The timestamp app is listening on port '+port+'!');
+app.listen(app.get( 'port' ), function () {
+  console.log('The timestamp app is listening on port '+app.get( 'port' )+'!');
 });
