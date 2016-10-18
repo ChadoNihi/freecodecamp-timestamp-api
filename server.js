@@ -1,6 +1,22 @@
 const express = require('express'),
+      stylus = require('stylus'),
+      nib = require('nib'),
       port = 8080,
       app = express();
+      
+function compile(str, path) {
+    return stylus(str)
+     .set('filename', path)
+     .set('compress', true)
+     .use(nib())
+     .import('nib');
+}
+      
+app.middleware({
+     src: __dirname + '/stylesheets'
+    , dest: __dirname + '/public'
+    , compile: compile
+})
       
 app.set('view engine', 'pug');
       
@@ -20,7 +36,7 @@ app.get('/:timeStr', function (req, res) {
         };
     } else {
         //res.statusCode = 400;
-        result = {};
+        result = {dateString: null, unixTime: null};
     }
     
     res.send(result);
